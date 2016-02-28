@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/news_item"
+        android:layout_marginLeft="6dp"
+        android:layout_marginRight="6dp"
+        android:layout_marginTop="-1dp"
+        >
+        <TextView
+            android:layout_weight="1"
+            android:id="@+id/tv_home_news_item_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh"
+            android:textSize="18sp"
+            android:maxLines="2"
+            android:textColor="#000000"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="18dp"
+            />
+        <ImageView
+            android:id="@+id/tv_home_news_item_image"
+            android:layout_width="80dp"
+            android:layout_height="70dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="15dp"
+            android:src="#ff00ff"
+            android:layout_alignParentRight="true"
+            android:visibility="visible"
+            />
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    >
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="58dp"
+        android:background="#00A2ED"
+        >
+        <!-- 菜单按键-->
+
+        <LinearLayout
+            android:id="@+id/ll_menu_images"
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginLeft="20dp"
+            >
+
+            <ImageView
+                android:id="@+id/iv_ment_btn_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/icon_menu"
+                />
+            <ImageView
+                android:id="@+id/iv_ment_btn_2"
+                android:layout_marginTop="4dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/icon_menu"
+                />
+            <ImageView
+                android:id="@+id/iv_ment_btn_3"
+                android:layout_marginTop="4dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/icon_menu"
+                />
+
+        </LinearLayout>
+        <!-- 透明的ImageView,用作菜单按键的点击响应-->
+        <ImageView
+            android:id="@+id/iv_menu_btn"
+            android:layout_width="55dp"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:orientation="vertical"
+            />
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="首页"
+            android:textSize="18sp"
+            android:layout_marginLeft="20dp"
+            android:textColor="#ffffff"
+            android:layout_toRightOf="@id/ll_menu_images"
+            />
+        <ImageButton
+            android:id="@+id/btn_more"
+            android:layout_centerVertical="true"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:background="@mipmap/more"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="12dp"
+            android:visibility="visible"
+            />
+        <ImageButton
+            android:id="@+id/btn_message"
+            android:layout_width="33dp"
+            android:layout_height="33dp"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/btn_more"
+            android:background="@mipmap/message"
+            android:layout_marginRight="10dp"
+            android:visibility="visible"
+            />
+        <ImageButton
+            android:id="@+id/btn_add_theme"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@mipmap/theme_add"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:visibility="gone"
+            />
+
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/rl"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <FrameLayout
+            android:id="@+id/fl_news_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+        </FrameLayout>
+
+    </RelativeLayout>
+</LinearLayout>

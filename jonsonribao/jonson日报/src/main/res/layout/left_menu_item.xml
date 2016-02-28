@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:padding="10dp"
+    android:background="#eeeeee"
+    >
+    <LinearLayout
+        android:layout_marginLeft="10dp"
+        android:layout_weight="4"
+        android:layout_width="0dp"
+        android:layout_height="match_parent">
+        <ImageView
+            android:id="@+id/iv_left_menu_home"
+            android:layout_gravity="center_vertical"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@mipmap/menu_home"
+            android:visibility="gone"
+            android:layout_marginLeft="10dp"
+            />
+        <TextView
+            android:id="@+id/tv_left_menu_item_title"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="分类条目"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="2dp"
+            />
+
+    </LinearLayout>
+    <ImageView
+        android:id="@+id/iv_left_menu_plus"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/menu_list_plus"
+        android:layout_gravity="right"
+        android:layout_marginRight="15dp"
+        />
+
+</LinearLayout>
