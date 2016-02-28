@@ -25,6 +25,13 @@
     "http://news-at.zhihu.com/api/4/themes"    //主题分类(侧滑菜单)
     "http://news-at.zhihu.com/api/4/theme/"   //主题列表(显示到主页面),后面+id
 
+	//获取更多评论
+	评论默认加载20条,获取更多评论是拿到上一个评论的最后一条评论,然后取它的id,把他变成/before/'REPLACE_ID',把他加在原来获取评论的网址后面
+	"news-at.zhihu.com/api/4/story/7740943/short-comments"  //评论网址
+	"news-at.zhihu.com/api/4/story/7740943/short-comments/before/'REPLACE_ID'  //评论网址加载更多
+
+	长评论也是使用一样的逻辑
+
 ###2.使用SlidingMenu完成侧滑功能;
 	主页面和侧滑菜分别使用一个Fragment作为容器;
 	侧滑菜单的列表设置点击监听,点击后触发主页面fragment中的setCurrentPage方法,把主页面的ListView移除,然后再添加对应页面的ListView;
