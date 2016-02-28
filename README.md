@@ -12,9 +12,9 @@
     "http://news-at.zhihu.com/api/4/start-image/1080*1776";//闪屏页图片
 
     //新闻
-    "http://news-at.zhihu.com/api/4/news/latest"  //主页面最新消息
-    "http://news-at.zhihu.com/api/4/news/"        //主页面消息跳转 后面+主页面消息条目的id
-    "http://news-at.zhihu.com/api/4/story-extra/";//主页面详细信息 后面+主页面消息条目的id
+    "http://news-at.zhihu.com/api/4/news/latest"  //主页面最新消息json
+    "http://news-at.zhihu.com/api/4/news/"        //获取新闻页面json 后面+主页面消息条目的id
+    "http://news-at.zhihu.com/api/4/story-extra/";//主页面详细信息json 后面+主页面消息条目的id
     "http://news-at.zhihu.com/api/4/story/'REPLACE_ID'/long-comments"   //新闻长评论 'REPLACE_ID替换为主页面消息条目的id
     "http://news-at.zhihu.com/api/4/story/'REPLACE_ID'/short-comments"   //新闻短评论 'REPLACE_ID替换为主页面消息条目的id
 
@@ -24,14 +24,13 @@
     //侧滑菜单
     "http://news-at.zhihu.com/api/4/themes"    //主题分类(侧滑菜单)
     "http://news-at.zhihu.com/api/4/theme/"   //主题列表(显示到主页面),后面+id
-    "http://news-at.zhihu.com/api/4/news/"   //主题列表条目(和NEWS_CONTENT_URL一样) , 后面+id
 
 ###2.使用SlidingMenu完成侧滑功能;
 	主页面和侧滑菜分别使用一个Fragment作为容器;
 	侧滑菜单的列表设置点击监听,点击后触发主页面fragment中的setCurrentPage方法,把主页面的ListView移除,然后再添加对应页面的ListView;
 	判断当前页面是否是主页面,不是则把铃铛和三个点图标设置为GONE,把加号设置为Visible;
 		
-![pic](http://i11.tietuku.com/7cbc2f38e373ea7c.gif)
+![pic](http://i11.tietuku.com/ec094cd0df882044.gif)
 
 ###3.主页面实现下拉刷新和加载更多,另外在新闻列表头添加一个头条轮播;
 
