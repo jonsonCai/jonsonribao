@@ -300,4 +300,6 @@ public class WebContentActivity extends Activity {
         slContent.removeAllViews();//关闭Activity时,移除掉WebView,
         super.onDestroy();
     }
+	
+	
 }
