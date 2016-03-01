@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/MyApplication1.iml" filepath="$PROJECT_DIR$/MyApplication1.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jonsonribao.iml" filepath="$PROJECT_DIR$/jonsonribao.iml" />
       <module fileurl="file://$PROJECT_DIR$/jonson日报/jonson日报.iml" filepath="$PROJECT_DIR$/jonson日报/jonson日报.iml" />
       <module fileurl="file://$PROJECT_DIR$/library/library.iml" filepath="$PROJECT_DIR$/library/library.iml" />
       <module fileurl="file://$PROJECT_DIR$/vipagerlib/vipagerlib.iml" filepath="$PROJECT_DIR$/vipagerlib/vipagerlib.iml" />

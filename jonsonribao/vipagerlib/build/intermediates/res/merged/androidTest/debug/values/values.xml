@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- From: file:/E:/jonsonribao/MyApplication1/vipagerlib/build/intermediates/bundles/debug/res/values/values.xml -->
+    <!-- From: file:/E:/jonsonribao/jonsonribao/jonsonribao/vipagerlib/build/intermediates/bundles/debug/res/values/values.xml -->
     <eat-comment/>
     <attr format="boolean" name="centered"/>
     <attr format="color" name="selectedColor"/>

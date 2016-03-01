@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.webkit.WebSettings;
@@ -250,8 +251,13 @@ public class WebContentActivity extends Activity {
                 htmlBody = document.toString();
 
                 //判断页面是否有图片
+                System.out.println("图片网址" + headerImageUrl);
                 if(headerImageUrl != null){
                     bitmapUtils.display(ivWebViewHeader, headerImageUrl);
+                }else{
+                    ViewGroup.LayoutParams layoutParams = ivWebViewHeader.getLayoutParams();
+                    layoutParams.height = titleBarHeight;
+                    ivWebViewHeader.setLayoutParams(layoutParams);
                 }
 
                 wvContent.loadDataWithBaseURL(null, htmlBody, null, "UTF-8", null);
