@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -20,6 +21,10 @@ import com.google.gson.Gson;
 import com.jonson.jonsonribao.ServerURL.ServerUrls;
 import com.jonson.jonsonribao.bean.NewsContentInfoJson;
 import com.jonson.jonsonribao.bean.NewsContentJson;
+import com.jonson.jonsonribao.utils.DateUtils;
+import com.jonson.jonsonribao.utils.DbNamesAndOther;
+import com.jonson.jonsonribao.utils.MD5Encoder;
+import com.jonson.jonsonribao.utils.MyDbUtils;
 import com.jonson.jonsonribao.view.MyScrollView;
 import com.lidroid.xutils.BitmapUtils;
 import com.lidroid.xutils.HttpUtils;
@@ -33,6 +38,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.util.HashMap;
+
 import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.onekeyshare.OnekeyShare;
 
@@ -41,7 +48,7 @@ public class WebContentActivity extends Activity {
     private TextView tvPraiseCount;
     private TextView tvCommentCount;
     private WebView wvContent;
-    private int titleBarHeight;
+    private static int titleBarHeight;
     private ImageView ivWebViewHeader;
     private BitmapUtils bitmapUtils;
 
@@ -110,6 +117,7 @@ public class WebContentActivity extends Activity {
 
         rlTitleBar.measure(0, 0);
         titleBarHeight = rlTitleBar.getMeasuredHeight();
+        Log.e("my" , "开始的标题栏高度" + titleBarHeight);
 
 
         rlTitleBar.getBackground().setAlpha(255);
@@ -221,53 +229,104 @@ public class WebContentActivity extends Activity {
      * 初始化webView数据
      * @param dataUrl
      */
-    private void initWebViewData(String dataUrl) {
+    private void initWebViewData(final String dataUrl) {
+        final MyDbUtils myDbUtils = new MyDbUtils(this);
+        HashMap<String, String> dbResult = myDbUtils.findDb(MD5Encoder.encode(dataUrl), DbNamesAndOther.WEB_DB);
 
-        HttpUtils httpUtils = new HttpUtils();
-        httpUtils.send(HttpRequest.HttpMethod.GET, dataUrl, new RequestCallBack<String>() {
-            @Override
-            public void onSuccess(ResponseInfo<String> responseInfo) {
-                String json = responseInfo.result;
-                Gson gson = new Gson();
-                newsContentJson = gson.fromJson(json, NewsContentJson.class);
-                String htmlBody = newsContentJson.body;
-                headerImageUrl = newsContentJson.image;
+        if(dbResult != null && dbResult.get("dbJson") != null){
+            System.out.println("webView从数据库取数据");
+            String json = dbResult.get("dbJson");
 
-                //给每个img标签加一个Style,宽度为页面的100%,用以适应手机屏幕
-                Document document = Jsoup.parse(htmlBody);
-                Elements img = document.getElementsByTag("img");
+            Gson gson = new Gson();
+            newsContentJson = gson.fromJson(json, NewsContentJson.class);
+            String htmlBody = newsContentJson.body;
+            headerImageUrl = newsContentJson.image;
 
-                int i = 0;
-                if(img.size() != 0){
-                    for (Element element:img) {
-                        if(i == 0){//默认第一张图片是作者头像,不用设置适应屏幕
-                            i++;
-                        }else{
-                            element.attr("style" , "width:100%");
-                            i++;
-                        }
+            //给每个img标签加一个Style,宽度为页面的100%,用以适应手机屏幕
+            Document document = Jsoup.parse(htmlBody);
+            Elements img = document.getElementsByTag("img");
+
+            int i = 0;
+            if(img.size() != 0){
+                for (Element element:img) {
+                    if(i == 0){//默认第一张图片是作者头像,不用设置适应屏幕
+                        i++;
+                    }else{
+                        element.attr("style" , "width:100%");
+                        i++;
                     }
                 }
-                htmlBody = document.toString();
+            }
+            htmlBody = document.toString();
 
-                //判断页面是否有图片
-                System.out.println("图片网址" + headerImageUrl);
-                if(headerImageUrl != null){
-                    bitmapUtils.display(ivWebViewHeader, headerImageUrl);
-                }else{
-                    ViewGroup.LayoutParams layoutParams = ivWebViewHeader.getLayoutParams();
-                    layoutParams.height = titleBarHeight;
-                    ivWebViewHeader.setLayoutParams(layoutParams);
+            BitmapUtils btUtils = new BitmapUtils(this);//bitmapUtils这里报空异常,重新new;
+
+            //判断页面是否有图片
+            System.out.println("图片网址" + headerImageUrl);
+            if(headerImageUrl != null){
+                btUtils.display(ivWebViewHeader, headerImageUrl);
+            }else{
+                ViewGroup.LayoutParams layoutParams = ivWebViewHeader.getLayoutParams();
+                layoutParams.height = titleBarHeight;
+                Log.e("my", titleBarHeight + "标题栏高度");
+                ivWebViewHeader.setLayoutParams(layoutParams);
+
+            }
+
+            wvContent.loadDataWithBaseURL(null, htmlBody, null, "UTF-8", null);
+
+
+
+        }else{//从网络加载数据
+            HttpUtils httpUtils = new HttpUtils();
+            httpUtils.send(HttpRequest.HttpMethod.GET, dataUrl, new RequestCallBack<String>() {
+                @Override
+                public void onSuccess(ResponseInfo<String> responseInfo) {
+                    String json = responseInfo.result;
+                    myDbUtils.addDb(MD5Encoder.encode(dataUrl) , DateUtils.date2String(new java.util.Date()), json , DbNamesAndOther.WEB_DB);
+                    Gson gson = new Gson();
+                    newsContentJson = gson.fromJson(json, NewsContentJson.class);
+                    String htmlBody = newsContentJson.body;
+                    headerImageUrl = newsContentJson.image;
+
+                    //给每个img标签加一个Style,宽度为页面的100%,用以适应手机屏幕
+                    Document document = Jsoup.parse(htmlBody);
+                    Elements img = document.getElementsByTag("img");
+
+                    int i = 0;
+                    if(img.size() != 0){
+                        for (Element element:img) {
+                            if(i == 0){//默认第一张图片是作者头像,不用设置适应屏幕
+                                i++;
+                            }else{
+                                element.attr("style" , "width:100%");
+                                i++;
+                            }
+                        }
+                    }
+                    htmlBody = document.toString();
+
+                    //判断页面是否有图片
+                    System.out.println("图片网址" + headerImageUrl);
+                    if(headerImageUrl != null){
+                        bitmapUtils.display(ivWebViewHeader, headerImageUrl);
+                    }else{
+                        ViewGroup.LayoutParams layoutParams = ivWebViewHeader.getLayoutParams();
+                        Log.e("my" , titleBarHeight + "标题栏高度");
+                        layoutParams.height = titleBarHeight;
+                        ivWebViewHeader.setLayoutParams(layoutParams);
+                    }
+
+                    wvContent.loadDataWithBaseURL(null, htmlBody, null, "UTF-8", null);
                 }
 
-                wvContent.loadDataWithBaseURL(null, htmlBody, null, "UTF-8", null);
-            }
+                @Override
+                public void onFailure(HttpException e, String s) {
+                    Toast.makeText(WebContentActivity.this, "加载失败", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
 
-            @Override
-            public void onFailure(HttpException e, String s) {
-                Toast.makeText(WebContentActivity.this, "加载失败", Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     /**

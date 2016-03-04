@@ -67,7 +67,6 @@ public class HomeListView extends ListView{
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
                 if (scrollState == SCROLL_STATE_IDLE) {
-                    System.out.println("最后显示条目" + getLastVisiblePosition() + "总条目" + getAdapter().getCount() + "headerView :" + getHeaderViewsCount());
                     if (getLastVisiblePosition() == getCount() - (getHeaderViewsCount()-1)) {
                         if(onLoadMoreListener != null){
                             onLoadMoreListener.onLoadMore();
@@ -103,11 +102,9 @@ public class HomeListView extends ListView{
                 int rangeX = endX - startX;
                 int rangeY = endY - startY;
 
-                System.out.println("滑动距离" + -headerViewHeight + rangeY);
 
                 if(rangeY > 0 && rangeY > rangeX){
                     if(getFirstVisiblePosition() == 0){
-                        System.out.println("第一条");
                         mHeaderView.setPadding(0 , (-headerViewHeight + rangeY) / 2 , 0 , 0);
 
                         if((-headerViewHeight + rangeY) > 100 && PULL_STATE != REFRESH_RELAX){

@@ -75,6 +75,7 @@
                 android:layout_centerVertical="true"
                 />
             <ImageView
+                android:id="@+id/iv_cache_load"
                 android:layout_width="40dp"
                 android:layout_height="wrap_content"
                 android:src="@mipmap/download"

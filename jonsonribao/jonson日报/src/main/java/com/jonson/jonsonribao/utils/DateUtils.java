@@ -7,7 +7,7 @@ import java.util.Date;
 /**
  * Created by jonson on 2016/2/22.
  */
-public class JumpDateUtils {
+public class DateUtils {
 
     private static int currentYear;
     private static int currentMonth;
@@ -15,6 +15,14 @@ public class JumpDateUtils {
     private static int monthDays;
     private static int jumpDays;
     private int targetDays;
+
+    public static String date2String(Date currentDate){
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        String cur = format.format(currentDate);
+        String[] split = cur.split("-");
+        String dateString = split[0] + split[1] + split[2];
+        return dateString;
+    }
 
     public String getResult(Date currentDate , int jumpDays){
 

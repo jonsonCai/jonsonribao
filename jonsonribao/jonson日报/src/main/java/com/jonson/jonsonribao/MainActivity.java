@@ -57,7 +57,6 @@ public class MainActivity extends SlidingFragmentActivity {
 
     public FragmentLeft getFragmentLeft(){
         return (FragmentLeft)fm.findFragmentByTag("FRAGMENT_LEFT");
-
     }
 
     /**

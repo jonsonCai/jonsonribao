@@ -27,7 +27,10 @@ import com.jonson.jonsonribao.R;
 import com.jonson.jonsonribao.ServerURL.ServerUrls;
 import com.jonson.jonsonribao.bean.NewsUrlJson;
 import com.jonson.jonsonribao.bean.ThemeListJson;
-import com.jonson.jonsonribao.utils.JumpDateUtils;
+import com.jonson.jonsonribao.utils.DateUtils;
+import com.jonson.jonsonribao.utils.MD5Encoder;
+import com.jonson.jonsonribao.utils.MyDbUtils;
+import com.jonson.jonsonribao.utils.DbNamesAndOther;
 import com.jonson.jonsonribao.view.HomeListView;
 import com.lidroid.xutils.BitmapUtils;
 import com.lidroid.xutils.HttpUtils;
@@ -39,6 +42,7 @@ import com.viewpagerindicator.CirclePageIndicator;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -99,6 +103,7 @@ public class FragmentMain extends Fragment {
     private String currentThemeItemId;
     private HomeListView themeListView;
     private ThemeListViewAdapter themeListViewAdapter;
+    private String currentDate;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -192,25 +197,49 @@ public class FragmentMain extends Fragment {
      * 从服务器获取数据
      * @return
      */
-    public Object getDataFromServer(final boolean isLoadMore , final boolean isRefresh ,final boolean isHome , String url) {
+    public Object getDataFromServer(final boolean isLoadMore , final boolean isRefresh ,final boolean isHome , final String url) {
 
-        HttpUtils httpUtils = new HttpUtils();
-        httpUtils.send(HttpRequest.HttpMethod.GET, url , new RequestCallBack<String>() {
-            @Override
-            public void onSuccess(ResponseInfo<String> responseInfo) {
-                String result = responseInfo.result;
-                parseData(isLoadMore, isRefresh, isHome, result);
-            }
+    //从数据库取数据
 
-            @Override
-            public void onFailure(HttpException e, String s) {
-                Toast.makeText(mActivity, "连接失败", Toast.LENGTH_SHORT).show();
-                if(homeListView != null){
-                    homeListView.RefreshFinish();
+        final MyDbUtils dbUtils = new MyDbUtils(mActivity);
+        final HashMap<String , String> dbResult = dbUtils.findDb(MD5Encoder.encode(url), DbNamesAndOther.MAIN_DB);
+        currentDate = DateUtils.date2String(new Date());
+
+    //对比存入数据库的日期是否和当前日期一致;
+        if(dbResult != null && dbResult.get("dbJson") != null && !isLoadMore && !isRefresh && currentDate.equals(dbResult.get("dbDate"))){
+            System.out.println("取用缓存");
+            parseData(isLoadMore, isRefresh, isHome, dbResult.get("dbJson"));
+    //加载更多从数据库取数据
+        }else if(dbResult != null && dbResult.get("dbJson") != null && isLoadMore){
+            System.out.println("加载更多取用缓存");
+            parseData(isLoadMore , isRefresh , isHome , dbResult.get("dbJson"));
+    //数据库中没有缓存,从网络获取
+        }else{
+
+            HttpUtils httpUtils = new HttpUtils();
+            httpUtils.send(HttpRequest.HttpMethod.GET, url , new RequestCallBack<String>() {
+                @Override
+                public void onSuccess(ResponseInfo<String> responseInfo) {
+                    String result = responseInfo.result;
+                    parseData(isLoadMore, isRefresh, isHome, result);
+                    dbUtils.addDb(MD5Encoder.encode(url) , currentDate , result , DbNamesAndOther.MAIN_DB);
                 }
-            }
-        });
-        return dataFromServer;
+
+                @Override
+                public void onFailure(HttpException e, String s) {
+                    Toast.makeText(mActivity, "连接失败", Toast.LENGTH_SHORT).show();
+                    if(homeListView != null){
+                        homeListView.RefreshFinish();
+                        if(dbResult != null){
+                            parseData(isLoadMore, isRefresh, isHome, dbResult.get("dbJson"));
+                        }
+
+                    }
+                }
+            });
+        }
+
+    return dataFromServer;
     }
 
     public void parseData(boolean isLoadMore , boolean isRefresh , boolean isHome , String json){
@@ -312,8 +341,8 @@ public class FragmentMain extends Fragment {
                 @Override
                 public void onLoadMore() {
                     Date date = new Date();
-                    JumpDateUtils jumpDateUtils = new JumpDateUtils();
-                    String historyDate = jumpDateUtils.getResult(date, --homeLoadCount);
+                    DateUtils dateUtils = new DateUtils();
+                    String historyDate = dateUtils.getResult(date, --homeLoadCount);
                     String loadMoreUrl = ServerUrls.HISTORY_NEWS_URL + historyDate;
                     Log.e("my", loadMoreUrl);
                     getDataFromServer(true, false, true, loadMoreUrl);
@@ -421,8 +450,8 @@ public class FragmentMain extends Fragment {
                 @Override
                 public void onLoadMore() {
                     Date date = new Date();
-                    JumpDateUtils jumpDateUtils = new JumpDateUtils();
-                    String historyDate = jumpDateUtils.getResult(date, --homeLoadCount);
+                    DateUtils dateUtils = new DateUtils();
+                    String historyDate = dateUtils.getResult(date, --homeLoadCount);
                     String loadMoreUrl = ServerUrls.THEME_LIST_URL + currentThemeItemId + "/before/" + themeStories.get(themeStories.size() - 1).id;
                     System.out.println("loadMoreUrl" + loadMoreUrl);
                     Log.e("my", loadMoreUrl);
